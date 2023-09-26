@@ -1,11 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import {
+  useFonts,
+  Poppins_400Regular,
+  Poppins_500Medium,
+} from '@expo-google-fonts/poppins';
+import AppLoading from 'expo-app-loading';
+import Routes from './src/routes';
+import './firebase.config'
+import UserProvider from './src/common/contexts/User';
+import BasketProvider from './src/common/contexts/Basket';
+import PaymentProvider from './src/common/contexts/Payment';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_500Medium,
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <BasketProvider>
+        <UserProvider>
+          <PaymentProvider>
+            <StatusBar style="auto" />
+            <Routes />
+          </PaymentProvider>
+        </UserProvider>
+      </BasketProvider>
     </View>
   );
 }
@@ -13,8 +39,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: '100%',
   },
 });
